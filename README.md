@@ -1,24 +1,13 @@
-# minigames-frontend
+# MiniGames Frontend
 
-## Project setup
-```
-yarn install
-```
+## Installer projekt
 
-### Compiles and hot-reloads for development
 ```
-yarn serve
+npm install
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+### Kør projekt
 
-### Lints and fixes files
 ```
-yarn lint
+npm run serve
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
