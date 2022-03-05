@@ -29,7 +29,9 @@ export const useMainStore = defineStore('main', {
       return { status, data };
     },
     async getAccountByUserId(userId: string): Promise<HttpResponse> {
-      const { status, data } = await httpClient.get(`Account/GetAccountByUserId?id=${userId}`);
+      const { status, data } = await httpClient.get(
+        `Account/GetAccountByUserId?id=${userId}`
+      );
       return { status, data };
     },
   },

@@ -1,9 +1,24 @@
 <template>
   <div id="app">
-    <div id="nav"><router-link to="/">Home</router-link> |</div>
+    <div id="nav">
+      <router-link to="/">Profil</router-link> |
+      <router-link to="/game1">Spil 1</router-link> |
+      <router-link to="/game2">Spil 2</router-link> |
+      <router-link to="/game3">Spil 3</router-link>
+    </div>
+
     <router-view />
   </div>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component({
+  components: {},
+})
+export default class App extends Vue {}
+</script>
 
 <style>
 #app {

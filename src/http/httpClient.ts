@@ -1,17 +1,17 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { HttpResponse, HttpFileResponse } from './httpResponse';
 
-export let API_URL = 'http://localhost:5001';
+export let API_URL = 'http://localhost:5000';
 
 const standardClient = axios.create({
   baseURL: API_URL,
 });
 
 standardClient.interceptors.response.use(
-  response => {
+  (response) => {
     return Promise.resolve(response);
   },
-  error => {
+  (error) => {
     if (error && !axios.isCancel(error)) {
       //TODO: redirect
     }
