@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div>
     {{ game }}
   </div>
 </template>
@@ -15,9 +15,4 @@ export default class Game1 extends Vue {
 }
 </script>
 
-<style scoped>
-.content {
-  width: 100%;
-  height: 100%;
-}
-</style>
+<style scoped></style>

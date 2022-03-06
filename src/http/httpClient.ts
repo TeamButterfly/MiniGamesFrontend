@@ -1,8 +1,10 @@
+import { MessageBus } from '@/components/MessageBus';
 import router from '@/router';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import Vue from 'vue';
 import { HttpResponse, HttpFileResponse } from './httpResponse';
 
-export let API_URL = 'http://localhost:5000';
+const API_URL: string = 'http://localhost:5000';
 
 const standardClient = axios.create({
   baseURL: API_URL,
@@ -10,6 +12,7 @@ const standardClient = axios.create({
 
 standardClient.interceptors.request.use(
   (config) => {
+    MessageBus.$emit('startGlobalLoading');
     if (config.headers) {
       if (localStorage.userData) {
         const token = JSON.parse(localStorage.userData).token;
@@ -19,15 +22,18 @@ standardClient.interceptors.request.use(
     return config;
   },
   (error) => {
+    MessageBus.$emit('stopGlobalLoading');
     Promise.reject(error);
   }
 );
 
 standardClient.interceptors.response.use(
   (response) => {
+    MessageBus.$emit('stopGlobalLoading');
     return Promise.resolve(response);
   },
   (error: AxiosError) => {
+    MessageBus.$emit('stopGlobalLoading');
     if (
       error &&
       error.response &&

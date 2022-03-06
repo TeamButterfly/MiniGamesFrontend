@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div id="nav" v-if="mainStore.account">
+    <loading v-if="mainStore.globalLoading"></loading>
+
+    <div class="nav" v-if="mainStore.account">
       <router-link to="/profile">Profil</router-link> |
       <router-link to="/game1">Spil 1</router-link> |
       <router-link to="/game2">Spil 2</router-link> |
@@ -8,17 +10,20 @@
       <router-link to="/logout">Log ud</router-link>
     </div>
 
-    <router-view />
+    <router-view class="content" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import Loading from './components/Loading.vue';
 import { MessageBus } from './components/MessageBus';
 import { useMainStore } from './store/mainStore';
 
 @Component({
-  components: {},
+  components: {
+    Loading,
+  },
 })
 export default class App extends Vue {
   mainStore = useMainStore();
@@ -27,6 +32,12 @@ export default class App extends Vue {
     MessageBus.$on('logout', () => {
       localStorage.removeItem('userData');
       this.mainStore.$reset();
+    });
+    MessageBus.$on('startGlobalLoading', () => {
+      this.mainStore.globalLoading = true;
+    });
+    MessageBus.$on('stopGlobalLoading', () => {
+      this.mainStore.globalLoading = false;
     });
   }
 }
@@ -46,6 +57,7 @@ export default class App extends Vue {
   font: inherit;
   vertical-align: baseline;
   font-family: Montserrat;
+  box-sizing: border-box;
 }
 
 html,
@@ -57,23 +69,31 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left;
   color: #2c3e50;
   height: 100%;
   width: 100%;
 }
 
-#nav {
+.nav {
   padding: 30px;
+  height: 80px;
+  text-align: center;
 }
 
-#nav a {
+.nav a {
   font-weight: bold;
   color: #2c3e50;
 }
 
-#nav a.router-link-exact-active {
+.nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.content {
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 5px;
 }
 
 input,
