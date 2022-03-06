@@ -133,4 +133,12 @@ select {
 .btn-secondary:hover {
   background-color: #3c7c99;
 }
+.btn-text {
+  color: #272727;
+  cursor: pointer;
+  text-align: center;
+}
+.btn-text:hover {
+  font-weight: bold;
+}
 </style>

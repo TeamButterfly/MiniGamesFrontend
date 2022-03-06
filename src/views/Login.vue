@@ -1,44 +1,27 @@
 <template>
   <div class="content">
     <div class="loginContainer">
-      <form>
-        <div class="loginContent">
-          <table>
-            <tr>
-              <td>Brugernavn:</td>
-              <td>
-                <input
-                  type="text"
-                  v-model="user.username"
-                  @keyup.enter="login()"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Password:</td>
-              <td>
-                <input
-                  type="password"
-                  v-model="user.password"
-                  @keyup.enter="login()"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="btn-secondary" @click="register()">
-                  Opret bruger
-                </div>
-              </td>
-              <td><div class="btn-primary" @click="login()">Login</div></td>
-            </tr>
-          </table>
-          <div style="height: 20px">
-            <span style="font-weight: bold">{{ message }}</span>
-          </div>
-        </div>
-      </form>
+      <div class="header">Log ind</div>
+      <input
+        type="text"
+        v-model="user.username"
+        @keyup.enter="login()"
+        placeholder="Brugernavn"
+      />
+      <input
+        type="password"
+        v-model="user.password"
+        @keyup.enter="login()"
+        placeholder="Password"
+      />
+      <div class="btn-primary" @click="login()">Login</div>
+      <div style="text-align: center">
+        eller,
+        <span class="btn-text" @click="register()">opret bruger</span>
+      </div>
     </div>
+
+    <popup name="loginPopup" :message="message" />
   </div>
 </template>
 
@@ -48,9 +31,10 @@ import { User } from '@/store/models';
 import { Component, Vue } from 'vue-property-decorator';
 import Validater from '@/components/Validater';
 import { AxiosError } from 'axios';
+import Popup from '@/components/Popup.vue';
 
 @Component({
-  components: {},
+  components: { Popup },
 })
 export default class Login extends Vue {
   mainStore = useMainStore();
@@ -69,9 +53,11 @@ export default class Login extends Vue {
     try {
       await this.mainStore.register(this.user);
       this.message = 'Brugeren blev oprettet';
+      this.$modal.show('loginPopup');
     } catch (err) {
       const axiosError = err as AxiosError;
       this.message = axiosError.response?.data.message;
+      this.$modal.show('loginPopup');
     }
   }
 
@@ -80,6 +66,7 @@ export default class Login extends Vue {
 
     if (!validaterObject.success) {
       this.message = validaterObject.message;
+      this.$modal.show('loginPopup');
       return;
     }
 
@@ -89,6 +76,7 @@ export default class Login extends Vue {
     } catch (err) {
       const axiosError = err as AxiosError;
       this.message = axiosError.response?.data.message;
+      this.$modal.show('loginPopup');
     }
   }
 }
@@ -98,34 +86,31 @@ export default class Login extends Vue {
 .content {
   width: 100%;
   height: 100%;
-  background: #303138;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  background: #05212b;
 }
 
 .loginContainer {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-content: center;
   justify-content: center;
-  align-items: center;
-}
-.loginContent {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 600px;
-  height: 250px;
-  background: #99c6ff;
-  border-radius: 80px;
+  width: 400px;
+  height: 300px;
+  background: white;
+  border-radius: 5px;
+  padding: 25px;
 }
 
-.loginContent td {
-  text-align: right;
+.header {
+  font-size: 32px;
+  font-weight: bolder;
+  text-align: left;
 }
 </style>
