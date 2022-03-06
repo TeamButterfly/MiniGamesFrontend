@@ -7,7 +7,9 @@
           <font-awesome-icon icon="fa-solid fa-circle-xmark" />
         </div>
       </div>
-      <div class="popupContent">{{ message }}</div>
+      <div class="popupContent">
+        {{ message }}
+      </div>
     </modal>
   </div>
 </template>
@@ -28,10 +30,10 @@ export default class Popup extends Vue {
   @Prop({ default: 'popupMessage' })
   name!: string;
 
-  @Prop({ default: 300 })
+  @Prop({ default: 380 })
   width!: number;
 
-  @Prop({ default: 140 })
+  @Prop({ default: 180 })
   height!: number;
 
   close() {
@@ -64,6 +66,9 @@ export default class Popup extends Vue {
   align-content: center;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  white-space: pre-line;
+  padding: 10px;
 }
 .closeIcon {
   font-size: 18px;

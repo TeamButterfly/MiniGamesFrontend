@@ -99,4 +99,19 @@ export async function download(url: string): Promise<HttpFileResponse> {
   return { status, data, filename, mimeType };
 }
 
+export function getAxiosError(err: any): string {
+  const axiosError = err as AxiosError;
+  if (axiosError.response?.data.message) {
+    return axiosError.response?.data.message;
+  }
+  let message = '';
+  if (axiosError.response?.data.errors) {
+    const errors = axiosError.response?.data.errors;
+    for (const key of Object.keys(errors)) {
+      message += errors[key] + '\n';
+    }
+  }
+  return message;
+}
+
 export default standardClient;

@@ -30,8 +30,8 @@ import { useMainStore } from '@/store/mainStore';
 import { User } from '@/store/models';
 import { Component, Vue } from 'vue-property-decorator';
 import Validater from '@/components/Validater';
-import { AxiosError } from 'axios';
 import Popup from '@/components/Popup.vue';
+import { getAxiosError } from '@/http/httpClient';
 
 @Component({
   components: { Popup },
@@ -55,8 +55,7 @@ export default class Login extends Vue {
       this.message = 'Brugeren blev oprettet';
       this.$modal.show('loginPopup');
     } catch (err) {
-      const axiosError = err as AxiosError;
-      this.message = axiosError.response?.data.message;
+      this.message = getAxiosError(err);
       this.$modal.show('loginPopup');
     }
   }
@@ -74,8 +73,7 @@ export default class Login extends Vue {
       await this.mainStore.login(this.user);
       this.$router.push({ name: 'Profile' });
     } catch (err) {
-      const axiosError = err as AxiosError;
-      this.message = axiosError.response?.data.message;
+      this.message = getAxiosError(err);
       this.$modal.show('loginPopup');
     }
   }

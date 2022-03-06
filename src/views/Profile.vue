@@ -40,10 +40,8 @@
           <td><div class="btn-primary" @click="update()">Opdater</div></td>
         </tr>
       </table>
-      <div style="font-weight: bold; text-align: center">
-        {{ message }}
-      </div>
     </div>
+    <popup name="profilePopup" :message="message" />
   </div>
 </template>
 
@@ -52,11 +50,12 @@ import { useMainStore } from '@/store/mainStore';
 import { Component, Vue } from 'vue-property-decorator';
 import { MessageBus } from '@/components/MessageBus';
 import { User } from '@/store/models';
-import { AxiosError } from 'axios';
 import Validater from '@/components/Validater';
+import Popup from '@/components/Popup.vue';
+import { getAxiosError } from '@/http/httpClient';
 
 @Component({
-  components: {},
+  components: { Popup },
 })
 export default class Profile extends Vue {
   mainStore = useMainStore();
@@ -64,10 +63,11 @@ export default class Profile extends Vue {
   message: string = '';
   editUser: User = new User();
 
-  async update() {
+  update() {
     const validaterObject = Validater.validate(this.editUser);
     if (!validaterObject.success) {
       this.message = validaterObject.message;
+      this.$modal.show('profilePopup');
       return;
     }
     this.mainStore
@@ -76,11 +76,12 @@ export default class Profile extends Vue {
         this.mainStore.getAccount().then(() => {
           this.editUser = new User();
           this.message = 'Dit brugernavn og password blev opdateret';
+          this.$modal.show('profilePopup');
         });
       })
       .catch((err: any) => {
-        const axiosError = err as AxiosError;
-        this.message = axiosError.response?.data.message;
+        this.message = getAxiosError(err);
+        this.$modal.show('profilePopup');
       });
   }
 }
