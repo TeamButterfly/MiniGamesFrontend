@@ -10,9 +10,13 @@ const standardClient = axios.create({
   baseURL: API_URL,
 });
 
+let loadingTimeout: number | null = null;
+
 standardClient.interceptors.request.use(
   (config) => {
-    MessageBus.$emit('startGlobalLoading');
+    loadingTimeout = setTimeout(() => {
+      MessageBus.$emit('startGlobalLoading');
+    }, 500);
     if (config.headers) {
       if (localStorage.userData) {
         const token = JSON.parse(localStorage.userData).token;
@@ -22,6 +26,10 @@ standardClient.interceptors.request.use(
     return config;
   },
   (error) => {
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
     MessageBus.$emit('stopGlobalLoading');
     Promise.reject(error);
   }
@@ -29,10 +37,18 @@ standardClient.interceptors.request.use(
 
 standardClient.interceptors.response.use(
   (response) => {
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
     MessageBus.$emit('stopGlobalLoading');
     return Promise.resolve(response);
   },
   (error: AxiosError) => {
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
     MessageBus.$emit('stopGlobalLoading');
     if (
       error &&

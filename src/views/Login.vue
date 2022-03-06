@@ -7,7 +7,11 @@
             <tr>
               <td>Brugernavn:</td>
               <td>
-                <input type="text" v-model="username" @keyup.enter="submit()" />
+                <input
+                  type="text"
+                  v-model="user.username"
+                  @keyup.enter="login()"
+                />
               </td>
             </tr>
             <tr>
@@ -15,18 +19,22 @@
               <td>
                 <input
                   type="password"
-                  v-model="password"
-                  @keyup.enter="submit()"
+                  v-model="user.password"
+                  @keyup.enter="login()"
                 />
               </td>
             </tr>
             <tr>
-              <td></td>
-              <td><div class="submit" @click="submit()">Login</div></td>
+              <td>
+                <div class="btn-secondary" @click="register()">
+                  Opret bruger
+                </div>
+              </td>
+              <td><div class="btn-primary" @click="login()">Login</div></td>
             </tr>
           </table>
           <div style="height: 20px">
-            <span style="color: #b11010">{{ error }}</span>
+            <span style="font-weight: bold">{{ message }}</span>
           </div>
         </div>
       </form>
@@ -38,6 +46,8 @@
 import { useMainStore } from '@/store/mainStore';
 import { User } from '@/store/models';
 import { Component, Vue } from 'vue-property-decorator';
+import Validater from '@/components/Validater';
+import { AxiosError } from 'axios';
 
 @Component({
   components: {},
@@ -45,27 +55,40 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Login extends Vue {
   mainStore = useMainStore();
 
-  error: string = '';
-  username: string = '';
-  password: string = '';
+  message: string = '';
+  user: User = new User();
 
-  async submit() {
-    if (!this.username) {
-      this.error = 'Indtast et brugernavn';
+  async register() {
+    const validaterObject = Validater.validate(this.user);
+
+    if (!validaterObject.success) {
+      this.message = validaterObject.message;
       return;
     }
-    if (!this.password) {
-      this.error = 'Indtast et password';
-      return;
-    }
+
     try {
-      const { status, data } = await this.mainStore.login(
-        this.username,
-        this.password
-      );
+      await this.mainStore.register(this.user);
+      this.message = 'Brugeren blev oprettet';
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      this.message = axiosError.response?.data.message;
+    }
+  }
+
+  async login() {
+    const validaterObject = Validater.validate(this.user);
+
+    if (!validaterObject.success) {
+      this.message = validaterObject.message;
+      return;
+    }
+
+    try {
+      await this.mainStore.login(this.user);
       this.$router.push({ name: 'Profile' });
     } catch (err) {
-      this.error = 'Forkert brugernavn eller password';
+      const axiosError = err as AxiosError;
+      this.message = axiosError.response?.data.message;
     }
   }
 }

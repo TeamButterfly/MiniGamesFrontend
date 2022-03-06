@@ -64,14 +64,14 @@ router.beforeEach((to, from, next) => {
     token = JSON.parse(localStorage.userData).token;
   }
 
-  if (to.path !== '/') {
+  if (to.path !== '/' && to.path !== '/logout') {
     if (!token) {
       if (router.currentRoute.name === 'Login') {
         return;
       }
-      router.replace({ name: 'Login' });
+      router.replace({ name: 'Logout' });
     }
-  } else {
+  } else if (to.path !== '/logout') {
     if (token) {
       router.replace({ name: 'Profile' });
     }

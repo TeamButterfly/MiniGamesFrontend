@@ -21,7 +21,7 @@
             <input
               type="text"
               v-model="editUser.username"
-              @keyup.enter="submit()"
+              @keyup.enter="update()"
             />
           </td>
         </tr>
@@ -31,13 +31,13 @@
             <input
               type="password"
               v-model="editUser.password"
-              @keyup.enter="submit()"
+              @keyup.enter="update()"
             />
           </td>
         </tr>
         <tr>
           <td></td>
-          <td><div class="submit" @click="submit()">Opdater</div></td>
+          <td><div class="btn-primary" @click="update()">Opdater</div></td>
         </tr>
       </table>
       <div style="font-weight: bold; text-align: center">
@@ -53,6 +53,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { MessageBus } from '@/components/MessageBus';
 import { User } from '@/store/models';
 import { AxiosError } from 'axios';
+import Validater from '@/components/Validater';
 
 @Component({
   components: {},
@@ -63,19 +64,10 @@ export default class Profile extends Vue {
   message: string = '';
   editUser: User = new User();
 
-  async submit() {
-    if (
-      this.editUser.username.length < 3 ||
-      this.editUser.username.length > 20
-    ) {
-      this.message = 'Brugernavnet skal være mellem 3 og 20 karakterer';
-      return;
-    }
-    if (
-      this.editUser.password.length < 3 ||
-      this.editUser.password.length > 20
-    ) {
-      this.message = 'Passwordet skal være mellem 3 og 20 karakterer';
+  async update() {
+    const validaterObject = Validater.validate(this.editUser);
+    if (!validaterObject.success) {
+      this.message = validaterObject.message;
       return;
     }
     this.mainStore

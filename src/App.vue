@@ -31,6 +31,7 @@ export default class App extends Vue {
   created() {
     MessageBus.$on('logout', () => {
       localStorage.removeItem('userData');
+      this.mainStore.activeAccount = null;
       this.mainStore.$reset();
     });
     MessageBus.$on('startGlobalLoading', () => {
@@ -106,7 +107,7 @@ select {
   border-radius: 4px;
   box-sizing: border-box;
 }
-.submit {
+.btn-primary {
   background-color: #4caf50;
   color: white;
   padding: 14px 20px;
@@ -116,7 +117,20 @@ select {
   cursor: pointer;
   text-align: center;
 }
-.submit:hover {
+.btn-primary:hover {
   background-color: #45a049;
+}
+.btn-secondary {
+  background-color: #4c90af;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+.btn-secondary:hover {
+  background-color: #3c7c99;
 }
 </style>

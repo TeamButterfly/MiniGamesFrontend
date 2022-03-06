@@ -33,11 +33,21 @@ export const useMainStore = defineStore('main', {
     },
   },
   actions: {
-    async login(username: string, password: string): Promise<HttpResponse> {
-      const { status, data } = await httpClient.post('Authentication/Login', {
-        username,
-        password,
-      });
+    async login(user: User): Promise<HttpResponse> {
+      const { status, data } = await httpClient.post(
+        'Authentication/Login',
+        user
+      );
+
+      this.activeAccount = data.account;
+      localStorage.setItem('userData', JSON.stringify(data));
+      return { status, data };
+    },
+    async register(user: User): Promise<HttpResponse> {
+      const { status, data } = await httpClient.post(
+        'Authentication/Register',
+        user
+      );
 
       this.activeAccount = data.account;
       localStorage.setItem('userData', JSON.stringify(data));
