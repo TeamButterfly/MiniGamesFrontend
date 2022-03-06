@@ -6,6 +6,8 @@ import Game2 from '../views/Game2.vue';
 import Game3 from '../views/Game3.vue';
 import Login from '../views/Login.vue';
 import httpClient from '@/http/httpClient';
+import { nextTick } from 'vue/types/umd';
+import { MessageBus } from '@/components/MessageBus';
 
 Vue.use(VueRouter);
 
@@ -35,6 +37,19 @@ const routes: RouteConfig[] = [
     name: 'Game3',
     component: Game3,
   },
+  {
+    path: '/logout',
+    name: 'Logout',
+    beforeEnter: (to, from, next) => {
+      localStorage.removeItem('userData');
+      MessageBus.$emit('logout');
+      return next({ name: 'Login' });
+    },
+  },
+  {
+    path: '*',
+    redirect: '/',
+  },
 ];
 
 const router = new VueRouter({
@@ -43,22 +58,23 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to.name !== 'Login') {
-    try {
-      const { status, data } = await httpClient.get(`Authentication/Verify`);
-      if (status === 200 && data === true) {
-        router.push({ name: 'Profile' });
-        next();
+router.beforeEach((to, from, next) => {
+  let token = '';
+  if (localStorage.userData) {
+    token = JSON.parse(localStorage.userData).token;
+  }
+
+  if (to.path !== '/') {
+    if (!token) {
+      if (router.currentRoute.name === 'Login') {
         return;
       }
-    } catch (e) {
-      console.log('"Unauthorized" - Rykkes til Login siden');
+      router.replace({ name: 'Login' });
     }
-    if (router.currentRoute.name === 'Login') {
-      return;
+  } else {
+    if (token) {
+      router.replace({ name: 'Profile' });
     }
-    router.push({ name: 'Login' });
   }
   next();
 });

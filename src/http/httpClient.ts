@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import router from '@/router';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { HttpResponse, HttpFileResponse } from './httpResponse';
 
 export let API_URL = 'http://localhost:5000';
@@ -7,13 +8,33 @@ const standardClient = axios.create({
   baseURL: API_URL,
 });
 
+standardClient.interceptors.request.use(
+  (config) => {
+    if (config.headers) {
+      if (localStorage.userData) {
+        const token = JSON.parse(localStorage.userData).token;
+        config.headers['Authorization'] = 'Bearer ' + token;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  }
+);
+
 standardClient.interceptors.response.use(
   (response) => {
     return Promise.resolve(response);
   },
-  (error) => {
-    if (error && !axios.isCancel(error)) {
-      //TODO: redirect
+  (error: AxiosError) => {
+    if (
+      error &&
+      error.response &&
+      error.response.status === 401 &&
+      !axios.isCancel(error)
+    ) {
+      router.replace({ name: 'Logout' });
     }
 
     return Promise.reject(error);
