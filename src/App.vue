@@ -2,12 +2,29 @@
   <div id="app">
     <loading v-if="mainStore.globalLoading"></loading>
 
-    <div class="nav" v-if="mainStore.account">
-      <router-link to="/profile">Profil</router-link> |
-      <router-link to="/game1">Spil 1</router-link> |
-      <router-link to="/game2">Spil 2</router-link> |
-      <router-link to="/game3">Spil 3</router-link> |
-      <router-link to="/logout">Log ud</router-link>
+    <div class="navContainer" v-if="mainStore.account">
+      <div class="nav">
+        <div class="link minigames">
+          <router-link to="/">
+            <font-awesome-icon icon="fa-solid fa-trophy" /> MiniGames
+          </router-link>
+        </div>
+        <div class="link">
+          <router-link to="/profile">Profil</router-link>
+        </div>
+        <div class="link">
+          <router-link to="/game1">Spil 1</router-link>
+        </div>
+        <div class="link">
+          <router-link to="/game2">Spil 2</router-link>
+        </div>
+        <div class="link">
+          <router-link to="/game3">Spil 3</router-link>
+        </div>
+        <div class="link">
+          <router-link to="/logout">Log ud</router-link>
+        </div>
+      </div>
     </div>
 
     <router-view class="content" />
@@ -71,30 +88,64 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
+  background: #f3f3f3;
   color: #2c3e50;
   height: 100%;
   width: 100%;
 }
 
-.nav {
-  padding: 30px;
+.navContainer {
+  background: white;
   height: 80px;
-  text-align: center;
+  box-shadow: 0px 1px 10px 0px #979797;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.nav a {
+.nav {
+  width: 800px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.link {
+  position: relative;
+  display: block;
+  padding: 10px 0;
+}
+.link.minigames {
+  font-size: 22px;
+  padding: 5px;
+}
+.link a {
+  text-decoration: none;
+  color: black;
   font-weight: bold;
-  color: #2c3e50;
 }
-
-.nav a.router-link-exact-active {
+.link a:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #37d631;
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.3s;
+}
+.link a:hover:after {
+  transform: scaleX(1);
+}
+.link a.router-link-exact-active {
   color: #42b983;
 }
 
 .content {
-  width: 100%;
   height: calc(100% - 80px);
-  padding: 5px;
+  padding: 25px 5px;
 }
 
 input,
