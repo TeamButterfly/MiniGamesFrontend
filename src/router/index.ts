@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Profile from '../views/Profile.vue';
-import Game1 from '../views/Game1.vue';
+import Hangman from '../views/Hangman.vue';
 import Game2 from '../views/Game2.vue';
 import Game3 from '../views/Game3.vue';
 import Login from '../views/Login.vue';
@@ -23,9 +23,9 @@ const routes: RouteConfig[] = [
     component: Profile,
   },
   {
-    path: '/game1',
-    name: 'Game1',
-    component: Game1,
+    path: '/hangman',
+    name: 'Hangman',
+    component: Hangman,
   },
   {
     path: '/game2',

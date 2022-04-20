@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import * as httpClient from '@/http/httpClient';
 import { HttpResponse } from '@/http/httpResponse';
-import { Account, User } from './models';
+import { Account, HangmanModel, User } from './models';
 
 export interface MainState {
   globalLoading: boolean;
@@ -10,6 +10,8 @@ export interface MainState {
 
   users: User[];
   accounts: Account[];
+
+  hangmanModel: HangmanModel;
 }
 
 export const useMainStore = defineStore('main', {
@@ -21,6 +23,8 @@ export const useMainStore = defineStore('main', {
 
       users: [],
       accounts: [],
+
+      hangmanModel: new HangmanModel(),
     };
   },
 
@@ -64,6 +68,38 @@ export const useMainStore = defineStore('main', {
       userData.account = data;
       this.activeAccount = data;
       localStorage.setItem('userData', JSON.stringify(userData));
+
+      return { status, data };
+    },
+    
+    //Hangman
+    async hangmanStart(): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('Hangman/Start');
+
+      this.hangmanModel = new HangmanModel();
+      this.hangmanModel.isGameRunning = true;
+
+      return { status, data };
+    },
+
+    async hangmanGuessLetter(letter: string): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('Hangman/GuessLetter?letter=' + letter);
+      const hangmanData = data as HangmanModel;
+      this.hangmanModel.guessletter = hangmanData.guessletter;
+      this.hangmanModel.isGameRunning = hangmanData.isGameRunning;
+      this.hangmanModel.isLetterGuessed = hangmanData.isLetterGuessed;
+      this.hangmanModel.life = hangmanData.life;
+      this.hangmanModel.playerguesses = hangmanData.playerguesses;
+      this.hangmanModel.word = hangmanData.word;
+      this.hangmanModel.wrongguesses = hangmanData.wrongguesses;
+
+      return { status, data };
+    },
+
+    async hangmanGuessWord(word: string): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('Hangman/GuessWord?word=' + word);
+
+      this.hangmanModel = data as HangmanModel;
 
       return { status, data };
     },

@@ -5,15 +5,13 @@
     <div class="navContainer" v-if="mainStore.account">
       <div class="nav">
         <div class="link minigames">
-          <router-link to="/">
-            <font-awesome-icon icon="fa-solid fa-trophy" /> MiniGames
-          </router-link>
+          <router-link to="/"> <font-awesome-icon icon="fa-solid fa-trophy" /> MiniGames </router-link>
         </div>
         <div class="link">
           <router-link to="/profile">Profil</router-link>
         </div>
         <div class="link">
-          <router-link to="/game1">Spil 1</router-link>
+          <router-link to="/hangman">Hangman</router-link>
         </div>
         <div class="link">
           <router-link to="/game2">Spil 2</router-link>
