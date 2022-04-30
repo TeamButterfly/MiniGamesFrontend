@@ -14,10 +14,10 @@
           <router-link to="/hangman">Hangman</router-link>
         </div>
         <div class="link">
-          <router-link to="/game2">Spil 2</router-link>
+          <router-link to="/slidepuzzle">Slide Puzzle</router-link>
         </div>
         <div class="link">
-          <router-link to="/game3">Spil 3</router-link>
+          <router-link to="/tictactoe">Tic Tac Toe</router-link>
         </div>
         <div class="link">
           <router-link to="/logout">Log ud</router-link>

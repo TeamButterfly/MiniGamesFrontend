@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import * as httpClient from '@/http/httpClient';
 import { HttpResponse } from '@/http/httpResponse';
-import { Account, HangmanModel, User } from './models';
+import { Account, HangmanModel, SlidePuzzleModel, User } from './models';
 
 export interface MainState {
   globalLoading: boolean;
@@ -12,6 +12,8 @@ export interface MainState {
   accounts: Account[];
 
   hangmanModel: HangmanModel;
+
+  slidePuzzleModel: SlidePuzzleModel;
 }
 
 export const useMainStore = defineStore('main', {
@@ -25,6 +27,8 @@ export const useMainStore = defineStore('main', {
       accounts: [],
 
       hangmanModel: new HangmanModel(),
+
+      slidePuzzleModel: new SlidePuzzleModel(),
     };
   },
 
@@ -84,6 +88,21 @@ export const useMainStore = defineStore('main', {
     async hangmanGuessWord(word: string): Promise<HttpResponse> {
       const { status, data } = await httpClient.get('Hangman/GuessWord?word=' + word);
       this.hangmanModel = data as HangmanModel;
+
+      return { status, data };
+    },
+
+    //SlidePuzzle
+    async slidePuzzleResetGame(): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('SlidePuzzle/Reset?size=16');
+      this.slidePuzzleModel = data as SlidePuzzleModel;
+
+      return { status, data };
+    },
+
+    async slidePuzzleMove(swapvalue: number): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('SlidePuzzle/Move?swapvalue=' + swapvalue);
+      this.slidePuzzleModel = data as SlidePuzzleModel;
 
       return { status, data };
     },

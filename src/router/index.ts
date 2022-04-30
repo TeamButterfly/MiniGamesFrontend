@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Profile from '../views/Profile.vue';
 import Hangman from '../views/Hangman.vue';
-import Game2 from '../views/Game2.vue';
-import Game3 from '../views/Game3.vue';
+import SlidePuzzle from '../views/SlidePuzzle.vue';
+import TicTacToe from '../views/TicTacToe.vue';
 import Login from '../views/Login.vue';
 import httpClient from '@/http/httpClient';
 import { nextTick } from 'vue/types/umd';
@@ -28,14 +28,14 @@ const routes: RouteConfig[] = [
     component: Hangman,
   },
   {
-    path: '/game2',
-    name: 'Game2',
-    component: Game2,
+    path: '/slidepuzzle',
+    name: 'slidepuzzle',
+    component: SlidePuzzle,
   },
   {
-    path: '/game3',
-    name: 'Game3',
-    component: Game3,
+    path: '/tictactoe',
+    name: 'tictactoe',
+    component: TicTacToe,
   },
   {
     path: '/logout',

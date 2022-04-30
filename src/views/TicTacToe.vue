@@ -10,8 +10,8 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   components: {},
 })
-export default class Game1 extends Vue {
-  game: string = 'Game 2';
+export default class TicTacToe extends Vue {
+  game: string = 'TicTacToe';
 }
 </script>
 

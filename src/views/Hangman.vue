@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { useMainStore } from '@/store/mainStore';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   components: {},
@@ -39,9 +39,7 @@ export default class Hangman extends Vue {
   guessedWord: string = '';
 
   mounted() {
-    if (!this.mainStore.hangmanModel.life) {
-      this.hangmanResetGame();
-    }
+    this.hangmanResetGame();
   }
 
   hangmanResetGame() {

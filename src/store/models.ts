@@ -16,3 +16,8 @@ export class HangmanModel {
   revealedWord!: string;
   isGameWon!: boolean;
 }
+
+export class SlidePuzzleModel {
+  board!: number[];
+  isGameWon!: boolean;
+}
