@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import * as httpClient from '@/http/httpClient';
 import { HttpResponse } from '@/http/httpResponse';
-import { Account, HangmanModel, SlidePuzzleModel, User } from './models';
+import { Account, HangmanModel, SlidePuzzleModel, TicTacToeModel, User } from './models';
 
 export interface MainState {
   globalLoading: boolean;
@@ -14,6 +14,8 @@ export interface MainState {
   hangmanModel: HangmanModel;
 
   slidePuzzleModel: SlidePuzzleModel;
+
+  ticTacToeModel: TicTacToeModel;
 }
 
 export const useMainStore = defineStore('main', {
@@ -29,6 +31,8 @@ export const useMainStore = defineStore('main', {
       hangmanModel: new HangmanModel(),
 
       slidePuzzleModel: new SlidePuzzleModel(),
+
+      ticTacToeModel: new TicTacToeModel(),
     };
   },
 
@@ -103,6 +107,21 @@ export const useMainStore = defineStore('main', {
     async slidePuzzleMove(swapvalue: number): Promise<HttpResponse> {
       const { status, data } = await httpClient.get('SlidePuzzle/Move?swapvalue=' + swapvalue);
       this.slidePuzzleModel = data as SlidePuzzleModel;
+
+      return { status, data };
+    },
+
+    //TicTacToe
+    async ticTacToeResetGame(): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('TicTacToe/Reset?squares=3');
+      this.ticTacToeModel = data as TicTacToeModel;
+
+      return { status, data };
+    },
+
+    async ticTacToeSetField(row: number, col: number): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('TicTacToe/SetField?row=' + row + '&col=' + col);
+      this.ticTacToeModel = data as TicTacToeModel;
 
       return { status, data };
     },

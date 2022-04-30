@@ -1,3 +1,9 @@
+export enum TicTacToeEnum {
+  None = 0,
+  Cross = 1,
+  Circle = 2,
+}
+
 export class User {
   userId: string = '';
   username: string = '';
@@ -20,4 +26,9 @@ export class HangmanModel {
 export class SlidePuzzleModel {
   board!: number[];
   isGameWon!: boolean;
+}
+
+export class TicTacToeModel {
+  board!: TicTacToeEnum[][];
+  winner!: TicTacToeEnum;
 }
