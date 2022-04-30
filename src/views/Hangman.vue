@@ -1,19 +1,25 @@
 <template>
   <div class="game">
-    <div class="gameContainer" v-if="mainStore.hangmanModel.isGameRunning">
+    <div class="gameContainer" v-if="mainStore.hangmanModel.life != null">
       <div class="image"><img :src="require(`../assets/hangman_${mainStore.hangmanModel.life}.png`)" /></div>
+      <div style="margin-bottom: 25px">
+        <span>{{ mainStore.hangmanModel.revealedWord }}</span>
+      </div>
       <div class="guess_letters">
-        <div v-for="(letter, index) in letters" :key="index" @click="hangmanGuessLetter(letter)">
+        <div v-for="(letter, index) in letters" :key="index" @click="hangmanGuessLetter(letter)" v-if="!guessedLetters.includes(letter)">
           {{ letter }}
         </div>
+        <div v-else style="cursor: default">_</div>
       </div>
       <div class="guess_word">
         <input placeholder="Gæt ordet" v-model="guessedWord" />
         <div class="btn-secondary" @click="hangmanGuessWord()">Gæt ord</div>
       </div>
+      <div v-if="mainStore.hangmanModel.isGameWon">Du har vundet og fået point! Se din konto for at se hvor mange point du har!</div>
+      <div v-if="mainStore.hangmanModel.life === 0">Du har tabt :( Nulstil spillet ved at klikke på "Genstart spillet"</div>
     </div>
     <div class="buttonContainer">
-      <div class="btn-secondary" @click="hangmanStart()">Start spillet</div>
+      <div class="btn-secondary" @click="hangmanResetGame()">Genstart spillet</div>
     </div>
   </div>
 </template>
@@ -29,17 +35,33 @@ export default class Hangman extends Vue {
   mainStore = useMainStore();
 
   letters: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z', 'Æ', 'Ø', 'Å'];
+  guessedLetters: string[] = [];
   guessedWord: string = '';
 
-  hangmanStart() {
-    this.mainStore.hangmanStart();
+  mounted() {
+    if (!this.mainStore.hangmanModel.life) {
+      this.hangmanResetGame();
+    }
+  }
+
+  hangmanResetGame() {
+    this.guessedLetters = [];
+    this.guessedWord = '';
+    this.mainStore.hangmanResetGame();
   }
 
   hangmanGuessLetter(letter: string) {
-    this.mainStore.hangmanGuessLetter(letter);
+    if (this.mainStore.hangmanModel.life === 0 || this.mainStore.hangmanModel.isGameWon) {
+      return;
+    }
+    this.guessedLetters.push(letter);
+    this.mainStore.hangmanGuessLetter(letter.toLowerCase());
   }
 
   hangmanGuessWord() {
+    if (this.mainStore.hangmanModel.life === 0 || this.mainStore.hangmanModel.isGameWon) {
+      return;
+    }
     this.mainStore.hangmanGuessWord(this.guessedWord);
   }
 }
@@ -83,7 +105,7 @@ export default class Hangman extends Vue {
 }
 
 .buttonContainer div {
-  width: 160px;
+  width: 180px;
   float: right;
   margin-right: 25px;
 }

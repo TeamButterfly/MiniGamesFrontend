@@ -4,20 +4,8 @@
 
     <div class="profile_content">
       <div class="profile_navigation">
-        <div
-          class="tab"
-          :class="{ active: tabActive === Tab.DETAILS }"
-          @click="tabActive = Tab.DETAILS"
-        >
-          <font-awesome-icon icon="fa-solid fa-circle-user" /> Mine detaljer
-        </div>
-        <div
-          class="tab"
-          :class="{ active: tabActive === Tab.ACCOUNT }"
-          @click="tabActive = Tab.ACCOUNT"
-        >
-          <font-awesome-icon icon="fa-solid fa-money-check-dollar" /> Min konto
-        </div>
+        <div class="tab" :class="{ active: tabActive === Tab.DETAILS }" @click="tabActive = Tab.DETAILS"><font-awesome-icon icon="fa-solid fa-circle-user" /> Mine detaljer</div>
+        <div class="tab" :class="{ active: tabActive === Tab.ACCOUNT }" @click="tabActive = Tab.ACCOUNT"><font-awesome-icon icon="fa-solid fa-money-check-dollar" /> Min konto</div>
       </div>
       <div class="tab_container">
         <div v-if="tabActive === Tab.DETAILS">
@@ -28,29 +16,13 @@
               <div class="col-fill">
                 <div>
                   <label for="username">Brugernavn:</label>
-                  <input
-                    type="text"
-                    name="username"
-                    v-model="editUser.username"
-                    @keyup.enter="update()"
-                  />
+                  <input type="text" name="username" v-model="editUser.username" @keyup.enter="update()" />
                 </div>
                 <div>
                   <label for="password">Password:</label>
-                  <input
-                    type="password"
-                    name="password"
-                    v-model="editUser.password"
-                    @keyup.enter="update()"
-                  />
+                  <input type="password" name="password" v-model="editUser.password" @keyup.enter="update()" />
                 </div>
-                <div
-                  class="btn-secondary"
-                  @click="update()"
-                  style="width: 120px"
-                >
-                  Gem
-                </div>
+                <div class="btn-secondary" @click="update()" style="width: 120px">Gem</div>
               </div>
             </div>
           </div>
@@ -64,9 +36,7 @@
               <div class="col-fill">
                 <div>
                   Du har
-                  <span style="font-weight: bold">{{
-                    mainStore.account.points
-                  }}</span>
+                  <span style="font-weight: bold">{{ mainStore.account.points }}</span>
                   point
                 </div>
               </div>
@@ -81,7 +51,7 @@
 
 <script lang="ts">
 import { useMainStore } from '@/store/mainStore';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { MessageBus } from '@/components/MessageBus';
 import { User } from '@/store/models';
 import Validater from '@/components/Validater';
@@ -105,6 +75,11 @@ export default class Profile extends Vue {
   Tab = Tab;
   tabActive: Tab = Tab.DETAILS;
 
+  @Watch('$route', { deep: true, immediate: true })
+  routeChanged() {
+    this.mainStore.getAccount();
+  }
+
   update() {
     const validaterObject = Validater.validate(this.editUser);
     if (!validaterObject.success) {
@@ -114,7 +89,7 @@ export default class Profile extends Vue {
     }
     this.mainStore
       .updateUser(this.editUser)
-      .then((resp) => {
+      .then(resp => {
         this.mainStore.getAccount().then(() => {
           this.editUser = new User();
           this.message = 'Dit brugernavn og password blev opdateret';

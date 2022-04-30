@@ -11,13 +11,8 @@ export class Account {
   user!: User;
 }
 
-
-export class HangmanModel{
-  life: number = 8;
-  isLetterGuessed!: boolean;
-  isGameRunning: boolean = false;
-  word!: string;
-  guessletter!: string;
-  wrongguesses!: string;
-  playerguesses!: string;
+export class HangmanModel {
+  life!: number;
+  revealedWord!: string;
+  isGameWon!: boolean;
 }
