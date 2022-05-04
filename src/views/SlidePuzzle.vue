@@ -10,6 +10,7 @@
     </div>
     <div class="buttonContainer">
       <div class="btn-secondary" @click="slidePuzzleResetGame()">Genstart spillet</div>
+      <div class="size">Størrelse på spillet: <input v-model="size" value="Størrelse" type="number" /></div>
     </div>
   </div>
 </template>
@@ -26,12 +27,14 @@ export default class SlidePuzzle extends Vue {
 
   board2D: number[][] = [];
 
+  size: number = 9;
+
   async mounted() {
     await this.slidePuzzleResetGame();
   }
 
   async slidePuzzleResetGame() {
-    await this.mainStore.slidePuzzleResetGame();
+    await this.mainStore.slidePuzzleResetGame(this.size);
     this.board2D = this.getBoard2D(this.mainStore.slidePuzzleModel.board);
   }
 
@@ -141,6 +144,14 @@ export default class SlidePuzzle extends Vue {
   cursor: pointer;
 }
 
+.buttonContainer .size {
+  float: right;
+  width: 250px;
+  margin-right: 5px;
+}
+.buttonContainer .size input {
+  width: 80px;
+}
 .buttonContainer div {
   width: 180px;
   float: right;

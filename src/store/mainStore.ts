@@ -97,8 +97,8 @@ export const useMainStore = defineStore('main', {
     },
 
     //SlidePuzzle
-    async slidePuzzleResetGame(): Promise<HttpResponse> {
-      const { status, data } = await httpClient.get('SlidePuzzle/Reset?size=16');
+    async slidePuzzleResetGame(size: number): Promise<HttpResponse> {
+      const { status, data } = await httpClient.get('SlidePuzzle/Reset?size=' + size);
       this.slidePuzzleModel = data as SlidePuzzleModel;
 
       return { status, data };
